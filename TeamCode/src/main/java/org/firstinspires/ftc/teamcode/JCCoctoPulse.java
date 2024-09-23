@@ -73,7 +73,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 @TeleOp()
 
-public class JCCoctoPulseAvg extends LinearOpMode {
+public class JCCoctoPulse extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -109,41 +109,14 @@ public class JCCoctoPulseAvg extends LinearOpMode {
         // Run stats to determine cycle times.
         MovingStatistics avgTime = new MovingStatistics(100);
         ElapsedTime elapsedTime = new ElapsedTime();
-        int under440 = 0;
-        int eq440 = 0;
-        int eq441 = 0;
-        int eq442 = 0;
-        int eq443 = 0;
-        int over443 = 0;
+
         while (opModeIsActive()) {
-            double avg = 0;
-            int sum = 0;
+
             // Read full OctoQuad data block
             octoquad.readAllEncoderData(encoderDataBlock);
             // Extract channel 6 from the data block and display
             int distance_mm = encoderDataBlock.positions[6];
-
-            for (int i = 0; i<100; i++){
-                octoquad.readAllEncoderData(encoderDataBlock);
-                sum += encoderDataBlock.positions[6];
-            }
-
-
-            if (distance_mm < 440) under440++;
-            if (distance_mm == 440) eq440++;
-            if (distance_mm == 441) eq441++;
-            if (distance_mm == 442) eq442++;
-            if (distance_mm == 443) eq443++;
-            if (distance_mm > 443) over443++;
-
             telemetry.addData("distance mm ", distance_mm);
-            telemetry.addData("avg ", sum/100);
-            telemetry.addData("under ", under440);
-            telemetry.addData("440 ", eq440);
-            telemetry.addData("441 ", eq441);
-            telemetry.addData("442 ", eq442);
-            telemetry.addData("443 ", eq443);
-            telemetry.addData("over ", over443);
 
             // Update cycle time stats
             avgTime.add(elapsedTime.nanoseconds());

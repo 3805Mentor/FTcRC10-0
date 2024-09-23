@@ -21,7 +21,6 @@
 
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.digitalchickenlabs.OctoQuad;
-import com.qualcomm.hardware.digitalchickenlabs.OctoQuadBase;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -29,8 +28,6 @@ import com.qualcomm.robotcore.util.MovingStatistics;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import java.util.ArrayList;
-import java.util.List;
 /*
  * This OpMode illustrates how to use advanced features of the DigitalChickenLabs OctoQuad Quadrature Encoder & Pulse Width Interface Module
  *
@@ -76,7 +73,7 @@ import java.util.List;
  */
 @TeleOp()
 
-public class JCCoctoPulse extends LinearOpMode {
+public class JCCoctoPulseAvg extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {

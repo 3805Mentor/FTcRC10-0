@@ -19,17 +19,21 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
+/* jc changes
+line 252 - changed max pulse width to 3010.  Maxbotix 1013 goes to 3000 uS at 1 uS per mm
+line 268 - steeringDegrees changed to report uS from channel 6
 
+
+
+ */
 import com.qualcomm.hardware.digitalchickenlabs.OctoQuad;
 import com.qualcomm.hardware.digitalchickenlabs.OctoQuadBase;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.MovingStatistics;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -79,9 +83,11 @@ import java.util.List;
  *
  * See the sensor's product page: https://www.tindie.com/products/35114/
  */
-@TeleOp(name="OctoQuad Advanced", group="OctoQuad")
-@Disabled
-public class SensorOctoQuadAdv extends LinearOpMode {
+@TeleOp()
+
+public class JCSensorOctoQuadAdv extends LinearOpMode {
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -128,14 +134,6 @@ public class SensorOctoQuadAdv extends LinearOpMode {
 }
 
 // ============================  Internal (Inner) Classes  =============================
-
-/***
- * OctoSwerveDrive class manages 4 Swerve Modules
- * - Performs general OctoQuad initialization
- * - Creates 4 module classes, one for each swerve module
- * - Updates swerve drive status by reading all data from OctoQuad and Updating each module
- * - Displays all swerve drive data as telemetry
- */
 class OctoSwerveDrive {
 
     private final OctoQuad octoquad;
@@ -206,9 +204,6 @@ class OctoSwerveDrive {
     }
 }
 
-/***
- * The OctoSwerveModule class manages a single swerve module
- */
 class OctoSwerveModule {
 
     public  double driveCounts;
@@ -220,6 +215,7 @@ class OctoSwerveModule {
     private final int      channel;
     private final double   angleOffset;
     private final double   steerDirMult;
+
 
     private static final int    VELOCITY_SAMPLE_INTERVAL_MS = 25;   // To provide 40 updates per second.
     private static final double DEGREES_PER_US = (360.0 / 1024.0);  // based on REV Through Bore Encoder
@@ -251,7 +247,10 @@ class OctoSwerveModule {
         octoquad.setSingleVelocitySampleInterval(channel + 4, VELOCITY_SAMPLE_INTERVAL_MS);
 
         // Setup Absolute encoder pulse range to match REV Through Bore encoder.
-        octoquad.setSingleChannelPulseWidthParams (channel + 4, new OctoQuad.ChannelPulseWidthParams(1,1024));
+        //octoquad.setSingleChannelPulseWidthParams (channel + 4, new OctoQuad.ChannelPulseWidthParams(1,1024));
+
+        //john
+        octoquad.setSingleChannelPulseWidthParams (channel + 4, new OctoQuad.ChannelPulseWidthParams(1,3010));
     }
 
     /***
@@ -263,9 +262,14 @@ class OctoSwerveModule {
         driveCountsPerSec = encoderDataBlock.velocities[channel] * VELOCITY_SAMPLES_PER_S; // convert counts/interval to counts/sec
 
         // convert uS to degrees.  Add in any possible direction flip.
-        steerDegrees = AngleUnit.normalizeDegrees((encoderDataBlock.positions[channel+ 4] * DEGREES_PER_US * steerDirMult) - angleOffset);
+        //steerDegrees = AngleUnit.normalizeDegrees((encoderDataBlock.positions[channel+ 4] * DEGREES_PER_US * steerDirMult) - angleOffset);
+
+        //john
+        steerDegrees = encoderDataBlock.positions[6];
         // convert uS/interval to deg per sec.  Add in any possible direction flip.
         steerDegreesPerSec = encoderDataBlock.velocities[channel + 4] * DEGREES_PER_US * steerDirMult * VELOCITY_SAMPLES_PER_S;
+
+
     }
 
     /**
